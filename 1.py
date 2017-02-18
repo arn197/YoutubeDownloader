@@ -15,11 +15,10 @@ symbol = "()"
 myPath = ''
 
 #change your path as required
-myPath = '/home/arn197/' + sys.argv[1]
+myPath = '/home/' + sys.argv[1]
 
 #input your playlist ID and your google api key
-playlistId = 'LL5J8Yx3bmgwkvnsvAYUlqiA'
-googleApiKey = 'AIzaSyBVIgOXB2Mw83wevGQwJ82hknz70HrOpFg'
+googleApiKey = ''
 
 def check():
 	if len(sys.argv) < 3:
@@ -33,7 +32,7 @@ def check():
 		playlistId = str(sys.argv[2])
 		limit1 = int(sys.argv[3])
 		limit2 = int(sys.argv[4])
-		chooseLink(limit1,limit2)
+		chooseLink(limit1,limit2,playlistId)
 
 
 def downloadVid(id1):
@@ -121,7 +120,7 @@ def downloadVid(id1):
 		f.close()
 	print "Done"
 
-def chooseLink(limit1,limit2):
+def chooseLink(limit1,limit2,playlistId):
 	pageToken = ''
 	while limit1 >= 50:
 		resp1 = requests.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&pageToken='+pageToken+'&playlistId=' + playlistId + '&key=' + googleApiKey)
@@ -135,11 +134,11 @@ def chooseLink(limit1,limit2):
 	limit2 = limit2 - 1
 	pageTok = ''
 	resp1 = requests.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&pageToken='+pageToken+'&playlistId=' + playlistId + '&key=' + googleApiKey)
-	pageTok = resp1.json()['nextPageToken']
+	# pageTok = resp1.json()['nextPageToken']
 	prevLastIdTemp = resp1.json()['items'][limit1]['snippet']['resourceId']['videoId']
 	x = limit1
 	while x <= limit2:
-		if x % 50 == 0:
+		if x % 50 == 0 and x > 0:
 			pageToken = pageTok
 			resp1 = requests.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&pageToken='+pageToken+'&playlistId=' + playlistId + '&key=' + googleApiKey)
 		# print response1['items'][0]['snippet']['resourceId']['videoId']
